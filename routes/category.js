@@ -1,15 +1,18 @@
 const express   =   require('express')
-const app       =   express()
 const router    =   express.Router()
 const model     =   require('../models/index')
 
-router.get('/category', function (req, res, next) {
+router.get('/', async function (req, res, next) {
+
+    const category  =   await model.Category.findAll({})
+
     return res.status(200).json({
-        mssg: 'category routes'
+        mssg: 'data category',
+        data: category
     })
 })
 
-router.post('/category/create', async function(req, res, next) {
+router.post('/create', async function(req, res, next) {
     const category          =   model.Category
     const { name,icon }     =   req.body
 
@@ -38,11 +41,65 @@ router.post('/category/create', async function(req, res, next) {
 
 })
 
-router.post(`/category/:id/edit`, async function(req, res, next) {
-    const category     =    model.Category
+router.patch(`/:id/edit`, async function(req, res, next) {
 
-    const data          =   category.findId({id:id})
+    const id        =   await req.params.id
+
+    if (!id) {
+        return res.status.json({
+            mssg: 'data not found'
+        })
+    }   
+        
+    try {
+        const category  =   await model.Category.update({
+            name, icon
+        }, {
+            where : {
+                id: id
+            }
+        })
+    
+        if (category) {
+            return res.status(201).json({
+                mssg: 'success created data',
+                data: category       
+            })
+        }    
+        
+    } catch (err) {
+        
+        return res.status(401).json({
+            mssg: err.message
+        })
+        
+    }
+
+})
 
 
+router.delete('/:id/delete', async function(req, res, next) {
+
+    try {
+        const   category    =   await model.Category.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        if (category) {
+            return res.status(202).json({
+                mssg: 'success deleted data',
+                data: category
+            })
+        }
+
+    } catch (err) {
+        
+        return res.status(500).json({
+            mssg: err.message
+        })
+
+    }
 
 })
