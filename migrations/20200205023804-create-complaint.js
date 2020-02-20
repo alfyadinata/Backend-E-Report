@@ -46,14 +46,6 @@ module.exports = {
       longitude: {
         type: Sequelize.CHAR
       },
-      admin_id: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: 'Users',
-          key: 'id'  
-        }
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

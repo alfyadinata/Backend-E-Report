@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     ip_address: DataTypes.CHAR,
     latitude: DataTypes.CHAR,
     longitude: DataTypes.CHAR,
-    admin_id: DataTypes.INTEGER
   }, {});
   Complaint.associate = function(models) {
     // associations can be defined here
