@@ -4,7 +4,9 @@ const model     =   require('../models/index')
 
 router.get('/', async function (req, res, next) {
 
-    const category  =   await model.Category.findAll({})
+    const limit      =   10
+
+    const category  =   await model.Category.findAll({limit})
 
     return res.status(200).json({
         mssg: 'data category',
