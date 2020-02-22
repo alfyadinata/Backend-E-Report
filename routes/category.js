@@ -51,7 +51,7 @@ router.patch(`/:id/edit`, async function(req, res, next) {
         return res.status.json({
             mssg: 'data not found'
         })
-    }   
+    }
         
     try {
         const category  =   await model.Category.update({
