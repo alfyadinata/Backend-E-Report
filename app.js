@@ -5,6 +5,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 var cors = require('cors')
+const expressValidator = require('express-validator')
 
 
 const indexRouter     = require('./routes/index')
@@ -16,6 +17,8 @@ const categoryRouter  = require('./routes/category')
 const app = express()
 // Middleware
 app.use(cors(), bodyParser.json())
+app.use(expressValidator())
+
 const auth  = require('./middleware/auth')
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))

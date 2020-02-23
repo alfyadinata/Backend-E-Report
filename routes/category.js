@@ -6,7 +6,11 @@ router.get('/', async function (req, res, next) {
 
     const limit      =   10
 
-    const category  =   await model.Category.findAll({limit})
+    const category  =   await model.Category.findAll({
+        order: [
+            ['id','desc']
+        ]
+    })
 
     return res.status(200).json({
         mssg: 'data category',
@@ -16,10 +20,10 @@ router.get('/', async function (req, res, next) {
 
 router.post('/create', async function(req, res, next) {
     const category          =   model.Category
-    const { name,icon }     =   req.body
+    const { name,icon, type  }     =   req.body
 
-    if (!name) {
-        res.status(401).json({
+    if (!name || name == null) {
+        return res.status(401).json({
             mssg: 'name is required'
         })
     }
@@ -27,10 +31,12 @@ router.post('/create', async function(req, res, next) {
     try {
         const data  =   category.create({
             name,
-            icon
+            icon,
+            type
         })        
+        console.info(type)
 
-        return res.status(202).json({
+        return res.status(201).json({
             mssg: 'success created data',
             data: data
         })
@@ -45,28 +51,30 @@ router.post('/create', async function(req, res, next) {
 
 router.patch(`/:id/edit`, async function(req, res, next) {
 
-    const id        =   await req.params.id
 
-    if (!id) {
-        return res.status.json({
-            mssg: 'data not found'
-        })
-    }
-        
+
     try {
+
+        const id                    =   req.params.id
+        const {name, icon, type}    =   req.body
+
         const category  =   await model.Category.update({
-            name, icon
+            name, icon, type
         }, {
             where : {
                 id: id
             }
         })
-    
+        
+        console.log('data : '+category)
+
         if (category) {
-            return res.status(201).json({
-                mssg: 'success created data',
+
+            return res.status(202).json({
+                mssg: 'success updated data',
                 data: category       
             })
+
         }    
         
     } catch (err) {
@@ -105,3 +113,5 @@ router.delete('/:id/delete', async function(req, res, next) {
     }
 
 })
+
+module.exports  =   router
