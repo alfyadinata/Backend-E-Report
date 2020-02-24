@@ -1,10 +1,10 @@
 const express   =   require('express')
 const router    =   express.Router()
 const model     =   require('../models/index')
+const logs      =   require('../helper/logs')
+
 
 router.get('/', async function (req, res, next) {
-
-    const limit      =   10
 
     const category  =   await model.Category.findAll({
         order: [
@@ -14,6 +14,7 @@ router.get('/', async function (req, res, next) {
 
     return res.status(200).json({
         mssg: 'data category',
+        ip: 'test :'+ req.ip,
         data: category
     })
 })
@@ -22,7 +23,7 @@ router.post('/create', async function(req, res, next) {
     const category          =   model.Category
     const { name,icon, type  }     =   req.body
 
-    if (!name || name == null) {
+    if (!name) {
         return res.status(401).json({
             mssg: 'name is required'
         })
@@ -69,6 +70,8 @@ router.patch(`/:id/edit`, async function(req, res, next) {
         console.log('data : '+category)
 
         if (category) {
+
+            logs('Updated a Category', req.ip)
 
             return res.status(202).json({
                 mssg: 'success updated data',
