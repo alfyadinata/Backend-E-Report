@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Blog.associate = function(models) {
     // associations can be defined here
+    Blog.belongsTo(models.Category, {
+      foreignKey: 'category_id',
+      as: 'categories'
+    })
   };
   return Blog;
 };
