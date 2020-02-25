@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Complaint.associate = function(models) {
     // associations can be defined here
+    Complaint.belongsTo(models.Category, {
+      foreignKey: 'category_id',
+      as: 'categories'
+    })
   };
   return Complaint;
 };
