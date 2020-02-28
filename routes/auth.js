@@ -7,23 +7,15 @@ const model =   require('../models/index')
 
 router.post("/signup", async function(req, res, next){
     try {
-            let check   =   model.User.findOne({where: {
-                email: req.body.email
-            }})
-
-            // if (check) {
-            //     return res.json({
-            //         status: 'failed',
-            //         msg: 'access denied'
-            //     })
-            // }
 
             const {name,email,nik,password} =   req.body
 
             if (!name || !email || !nik || !password) {
+
                 return res.status(403).json({
                     msg: 'invalid input'
                 })
+
             }
 
             let user = new model.User({
@@ -40,6 +32,7 @@ router.post("/signup", async function(req, res, next){
                     id: user.id,
                     name: user.name,
                     email: user.email,
+                    role_id: 3,
                     msg: 'payload'
                 }
             }
@@ -101,6 +94,7 @@ router.post("/signin", async function(req, res){
                                         id: user.id,
                                         name: user.name,
                                         email: user.email,
+                                        role_id: 3,
                                     }, "randomString",
                                         {
                                             expiresIn: 1000
@@ -125,6 +119,28 @@ router.post("/signin", async function(req, res){
 
     }
 
+
+})
+
+router.delete('/:id/delete', async function(req, res, next) {
+
+    try {
+        
+        const   complaint   =   model.Complaint.destroy({where: req.params.id})
+
+        return res.status(202).json({
+            mssg: 'success deleted data',
+            data: complaint
+        })
+
+    } catch (err) {
+        
+        return res.status(500).json({
+            status: 'error',
+            msg: err.message
+        })
+
+    }
 
 })
 

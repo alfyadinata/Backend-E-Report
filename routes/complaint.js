@@ -6,35 +6,40 @@ const model         = require('../models/index')
 const multer        = require('multer')
 const bodyParser    = require('body-parser')
 
-
 const Storage   =   multer.diskStorage({
     destination(req, file, callback) {
         callback(null, './public/images/')
     },
     filename(req, file, callback) {
-        callback(null, `${file.fieldname}_${Date.now()}_${file.originalname}`)
+        callback(null, `${Date.now()}_${file.originalname}`)
     }
 })
 
 const upload    =   multer({storage: Storage})
 
-router.get('/', function(req, res, next) {
-    res.json({
-        status: 'ok'
+router.get('/', async function(req, res, next) {
+
+    const complaint     =       await model.Complaint.findAll({})
+    return res.status(200).json({
+        data: complaint
     })
+    
 })
 
-router.post('/create', upload.single('photo', 3), async (req, res) => {
+router.post('/create', upload.single('foto', 3), async (req, res) => {
 
     const   complaint               =   model.Complaint
-
+    
     try {
 
-        const   { title, 
-            description, 
-                address  }          =   req.body
-        const   thumbnail           =   req.file.filename
-        const   token               =   jwt.verify
+        const   { 
+            title,
+            description,
+            address,
+            user_id,
+            category_id
+        }          =   req.body
+        const   foto           =   req.file.filename
 
         if (!req.file) {
             return res.status(402).json({
@@ -43,35 +48,72 @@ router.post('/create', upload.single('photo', 3), async (req, res) => {
             })
         }
     
-        if (!title || !description || !address) {
+        if (title == "" || description == "" || address == "") {
             return res.status(402).json({
                 status: 'err',
-                mssg: 'invalid input'
+                mssg: 'invalid input',
+                title: title
             })
         }
 
         const data    =   await complaint.create({
             title,
             description,
-            thumbnail,
+            foto,
             user_id,
             category_id
         })
 
-        return res.status(202).json({
+        return res.status(201).json({
             mssg: 'success created data',
             data: data
         })
 
     } catch (err) {
+
         return res.status(500).json({
             mssg: err.message
         })
+
     }
-    // console.info('name '+ req.file.filename )
-    // res.status(200).json({
-    //     message: 'success!',
-    //   })
+})
+
+router.patch('/:id/edit', async function(req, res, next) {
+
+    try {
+        const   id      =   req.params.id
+        const { 
+            title,
+            description, 
+            category_id,
+            isAnonym,  
+        }               =   req.body
+
+        const complaint =   await model.Complaint.update({
+            title, description, isAnonym, category_id
+        },{
+            where: {
+                id: id
+            }
+        })
+
+        if (complaint) {
+            
+            return res.status(201).json({
+                mssg: 'success created data',
+                data: complaint
+            })
+
+        }
+
+    } catch (err) {
+
+        return res.status(500).json({
+            mssg: err.message
+        })
+
+    }
+
 })
 
 
