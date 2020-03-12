@@ -13,13 +13,16 @@ const usersRouter     = require('./routes/users')
 const authRouter      = require('./routes/auth')
 const complaintRouter = require('./routes/complaint')
 const categoryRouter  = require('./routes/category')
+const logRouter  = require('./routes/log')
 
 const app = express()
-// Middleware
-app.use(cors(), bodyParser.json())
+app.use(cors())
+app.use(bodyParser.json())
 app.use(expressValidator())
+// Middleware
+const auth            = require('./middleware/auth')
+const middSuperAdmin  = require('./middleware/superAdmin')
 
-const auth  = require('./middleware/auth')
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
@@ -34,7 +37,8 @@ app.use('/', indexRouter)
 app.use('/users', auth, usersRouter)
 app.use('/auth', authRouter)
 app.use('/complaint', auth, complaintRouter)
-app.use('/category', categoryRouter)
+app.use('/category', auth, categoryRouter)
+app.use('/log', middSuperAdmin, logRouter)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404))

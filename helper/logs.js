@@ -6,7 +6,7 @@ async function logs(message, ip) {
 
     try {
 
-        return await model.Log.create({
+        await model.Log.create({
             ip: ip,
             latitude:'',
             longitude:'',

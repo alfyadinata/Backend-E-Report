@@ -10,14 +10,17 @@ router.get('/', async function (req, res, next) {
         order: [
             ['id','desc']
         ],
-        include: ['blogs']
+        include: ['blogs','complaints'],
     })
+
+    logs('Request data for category',req.ip)
 
     return res.status(200).json({
         mssg: 'data category',
         ip: 'test :'+ req.ip,
-        data: category
+        data: category,
     })
+
 })
 
 router.post('/create', async function(req, res, next) {
@@ -36,7 +39,8 @@ router.post('/create', async function(req, res, next) {
             icon,
             type
         })        
-        console.info(type)
+
+        logs(`Created Category, Name: ${name}`,req.ip)
 
         return res.status(201).json({
             mssg: 'success created data',
@@ -53,8 +57,6 @@ router.post('/create', async function(req, res, next) {
 
 router.patch(`/:id/edit`, async function(req, res, next) {
 
-
-
     try {
 
         const id                    =   req.params.id
@@ -68,11 +70,9 @@ router.patch(`/:id/edit`, async function(req, res, next) {
             }
         })
         
-        console.log('data : '+category)
-
         if (category) {
 
-            logs('Updated a Category', req.ip)
+            logs(`Updated Category, Name: ${name}`,req.ip)
 
             return res.status(202).json({
                 mssg: 'success updated data',
@@ -102,10 +102,14 @@ router.delete('/:id/delete', async function(req, res, next) {
         })
 
         if (category) {
+
+            logs(`Deleted Category, Name: ${category.name}`,req.ip)
+
             return res.status(202).json({
                 mssg: 'success deleted data',
                 data: category
             })
+
         }
 
     } catch (err) {

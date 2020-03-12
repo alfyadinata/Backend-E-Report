@@ -2,6 +2,7 @@ const express = require("express")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const router = express.Router()
+require('dotenv/config');
 
 const model =   require('../models/index')
 
@@ -68,7 +69,7 @@ router.post("/signin", async function(req, res){
     const user =   await model.User.findOne({
         where: {
             email: email,
-            role_id: 3
+            // role_id: 3
         }
     })
 
@@ -95,10 +96,7 @@ router.post("/signin", async function(req, res){
                                         name: user.name,
                                         email: user.email,
                                         role_id: 3,
-                                    }, "randomString",
-                                        {
-                                            expiresIn: 1000
-                                        }
+                                    }, process.env.JWTKEY
                                     )
 
                 return res.json({

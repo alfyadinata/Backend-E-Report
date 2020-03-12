@@ -8,21 +8,90 @@ const Model       =  require('../models/index')
 
 /* GET users listing. */
 router.get('/', async function(req, res, next) {
+  
+  let   { per_page, page }  = req.body
+  console.log(per_page)
 
-  let   data  = await Model.User.findAll({})
+  try {
+   
+    let   data  = await Model.User.paginate({
+      page: page,
+      paginate: per_page,
+      // order: [['id','DESC']]
+    })
+  
+    res.json({
+      // profile: req.,
+      msg: 'data users',
+      data: data
+    })
 
-  res.json({
-    status: 'ok',
-    // profile: req.,
-    msg: 'success loaded',
-    data: data
+  } catch (err) {
 
-  })
+    return res.status(500).json({
+      mssg: err.message
+    })
+
+  }
 
 })
 
-router.get('/json', function(req,res, next) {
-  res.send('json page')
+router.post('/create', async function(req, res, next) {
+
+  try {
+    
+    const {name,email,nik,password, role_id} =   req.body
+
+    let user = new Model.User({
+        name,
+        email,
+        nik,
+        password,
+        role_id
+    })
+    const salt = await bcrypt.genSalt(10)
+    user.password = await bcrypt.hash(nik, salt)
+    await user.save()
+
+    return res.status(201).json({
+      mssg: 'success created data',
+      data: user
+    })
+
+  } catch (err) {
+    console.info(err)
+    return res.status(500).json({
+      mssg: err.message
+    })
+
+  }
+
+})
+
+router.delete('/:id/delete', async function(req,res, next) {
+
+  try {
+    const   user    =   await Model.User.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
+
+    if (user) {
+        return res.status(202).json({
+            mssg: 'success deleted data',
+            data: user
+        })
+    }
+
+  } catch (err) {
+      
+      return res.status(500).json({
+          mssg: err.message
+      })
+
+  }
+
 })
 
 router.post("/signup",[check("name", "Please Enter a Valid name").not().isEmpty(),

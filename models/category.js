@@ -1,4 +1,6 @@
 'use strict';
+const sequelizePaginate = require('sequelize-paginate')
+
 module.exports = (sequelize, DataTypes) => {
   const Category = sequelize.define('Category', {
     name: DataTypes.STRING,
@@ -18,5 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'complaints'
     })
   };
+
+  sequelizePaginate.paginate(Category)
   return Category;
 };
