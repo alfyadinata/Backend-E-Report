@@ -1,40 +1,28 @@
 // this middleware can used by all role
-const   jwt     =   require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 require('dotenv/config');
 
-  async function auth(req, res, next) {
+async function auth(req, res, next) {
+	try {
+		const token = await req.headers['authorization'];
+		const key = process.env.JWTKEY;
 
-    try 
-    {
+		await jwt.verify(token, key, (err, decoded) => {
+			if (err) {
+				return res.status(401).json({
+					mssg: err.message
+				});
+			}
 
-      const token    = await req.headers['authorization']
-      const key      = process.env.JWTKEY
-        
-      const verify   = await jwt.verify(`${token}`, key, (err, decoded) => {
+			req.decoded = decoded;
+			return next();
+		});
+	} catch (err) {
+		return res.json({
+			status: 'error',
+			mssg: err.message
+		});
+	}
+}
 
-        if (err) {
-          
-          return res.status(401).json({
-            mssg: err.message
-          })
-
-        }
-
-        req.decoded = decoded
-        return next()
-
-      })
-
-    } catch (err) {
-
-        return res.json({
-          status: 'error',
-          mssg: err.message
-        })
-
-    }
-
-  }
-
-
-  module.exports    =   auth
+module.exports = auth;

@@ -1,0 +1,40 @@
+{
+	"project_info": {
+		"project_number": "657063286113",
+		"firebase_url": "https://ecomplaint-1026a.firebaseio.com",
+		"project_id": "ecomplaint-1026a",
+		"storage_bucket": "ecomplaint-1026a.appspot.com"
+	},
+	"client": [
+		{
+			"client_info": {
+				"mobilesdk_app_id": "1:657063286113:android:b3f0b389c08d623015e120",
+				"android_client_info": {
+					"package_name": "com.alfyadinata.ecomplaint"
+				}
+			},
+			"oauth_client": [
+				{
+					"client_id": "657063286113-5f1drt617481o44ctb7jq7d39h6kv21v.apps.googleusercontent.com",
+					"client_type": 3
+				}
+			],
+			"api_key": [
+				{
+					"current_key": "AIzaSyASsiYqpBFUN2lXTvU67mn0C7rvRbY6aTM"
+				}
+			],
+			"services": {
+				"appinvite_service": {
+					"other_platform_oauth_client": [
+						{
+							"client_id": "657063286113-5f1drt617481o44ctb7jq7d39h6kv21v.apps.googleusercontent.com",
+							"client_type": 3
+						}
+					]
+				}
+			}
+		}
+	],
+	"configuration_version": "1"
+}
