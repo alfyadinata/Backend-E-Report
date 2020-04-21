@@ -59,12 +59,6 @@ router.post('/signin', async function(req, res) {
 		}
 	});
 
-	if (!user) {
-		return res.status(403).json({
-			msg: 'email not found'
-		});
-	}
-
 	try {
 		if (user) {
 			await bcrypt.compare(password, user.password, async function(err, resp) {
@@ -78,8 +72,8 @@ router.post('/signin', async function(req, res) {
 					{
 						id: user.id,
 						name: user.name,
-						email: user.email,
-						role_id: user.role_id
+						role_id: user.role_id,
+						email: user.email
 					},
 					process.env.JWTKEY
 				);

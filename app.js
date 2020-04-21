@@ -13,7 +13,8 @@ const authRouter = require('./routes/auth');
 const complaintRouter = require('./routes/complaint');
 const categoryRouter = require('./routes/category');
 const logRouter = require('./routes/log');
-
+const responseRouter = require('./routes/response');
+const notifRouter = require('./routes/notif');
 // import { admin } from './firebase-config';
 const admin = require('./firebase-config');
 const app = express();
@@ -34,12 +35,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/auth', authRouter);
 app.use('/', indexRouter);
 app.use('/users', middSuperAdmin, usersRouter);
-app.use('/auth', authRouter);
 app.use('/complaint', auth, complaintRouter);
+app.use('/response', middSuperAdmin, responseRouter);
 app.use('/category', auth, categoryRouter);
 app.use('/log', middSuperAdmin, logRouter);
+app.use('/notif', notifRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
 	next(createError(404));

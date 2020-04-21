@@ -21,22 +21,22 @@ const upload = multer({ storage: Storage });
 router.get('/', async function(req, res, next) {
 	let complaint = [];
 	let user = await req.decoded;
-
 	try {
-		if (user.role_id !== 1) {
-			complaint = await model.complaint.findAll({
-				where: {
-					user_id: user.id
-				},
-				order: [ [ 'id', 'DESC' ] ],
-				include: [ 'users' ]
-			});
-		} else {
-			complaint = await model.Complaint.findAll({
-				order: [ [ 'id', 'DESC' ] ],
-				include: [ 'users' ]
-			});
-		}
+		user.role_id !== 1
+			? (complaint = await model.Complaint.findAll({
+					where: {
+						user_id: user.id
+					},
+					order: [ [ 'id', 'DESC' ] ],
+					include: [ 'users' ]
+				}))
+			: (complaint = await model.Complaint.findAll({
+					where: {
+						status: null
+					},
+					order: [ [ 'id', 'DESC' ] ],
+					include: [ 'users' ]
+				}));
 
 		return res.status(200).json({
 			data: complaint

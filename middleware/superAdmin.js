@@ -8,7 +8,7 @@ async function superAdmin(req, res, next) {
 		const key = process.env.JWTKEY;
 
 		await jwt.verify(token, key, (err, decoded) => {
-			if (err !== null) {
+			if (err) {
 				return res.status(401).json({
 					mssg: err.message
 				});
